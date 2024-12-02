@@ -1,0 +1,38 @@
+import socket
+from cryptography.fernet import Fernet
+
+# Function to simulate encryption (for demonstration)
+def encrypt_message(message, key):
+    f = Fernet(key)
+    encrypted_message = f.encrypt(message.encode())
+    return encrypted_message
+
+# Function to interact with the server
+def query_server():
+    host = 'localhost'
+    port = 5000
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((host, port))
+
+    # Simple user authentication
+    username = input("Enter username: ")
+    client.sendall(username.encode())
+    password = input("Enter password: ")
+    client.sendall(password.encode())
+
+    # Query year
+    year = input("Enter the year for UFC data: ")
+    client.sendall(year.encode())
+
+    # Get and print the response
+    data = client.recv(1024)
+    print("UFC Data:", data.decode())
+
+    # Option for more information
+    more_info = input("Would you like more info? (yes/no): ")
+    client.sendall(more_info.encode())
+
+    client.close()
+
+# Run the client
+query_server()
